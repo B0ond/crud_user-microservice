@@ -3,10 +3,11 @@ from uuid import UUID
 from datetime import datetime
 
 
-class BaseSchema(BaseModel):
+class ReadModel(BaseModel):
     """для удобства чтения объектов модели данных в виде словарей"""
     class Config:
-        orm_mode = True
+        orm_mode = True  # по умолчанию pydantic работает только с dict,
+        # поэтому нужно сказать ему что работаем с ORM объектами
 
 
 class UserCreateSchema(BaseModel):
@@ -15,15 +16,15 @@ class UserCreateSchema(BaseModel):
     name: str = Field(..., min_length=1, max_length=300, title="Имя пользователя")
 
 
-class UserUpdateSchema(BaseModel):
-    """Обновление пользователя"""
-    email: EmailStr | None = None
-    name: str | None = None
-
-
-class UserReadSchema(BaseSchema):
+class UserReadSchema(ReadModel):
     """Ответ клиенту (чтение пользователя)"""
     id: UUID
     email: EmailStr
     name: str
     created_at: datetime
+
+
+class UserUpdateSchema(BaseModel):
+    """Обновление пользователя"""
+    email: EmailStr | None = None
+    name: str | None = None
