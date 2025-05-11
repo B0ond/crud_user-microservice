@@ -3,24 +3,27 @@ from uuid import UUID
 from datetime import datetime
 
 
-class UserCreate(BaseModel):
+class BaseSchema(BaseModel):
+    """для удобства чтения объектов модели данных в виде словарей"""
+    class Config:
+        orm_mode = True
+
+
+class UserCreateSchema(BaseModel):
     """Создание пользователя (входные данные от клиента)"""
     email: EmailStr  # проверяет, что это валидная почта
-    name: str = Field(..., min_length=1, max_length=300, title="Имя пользователя")  # имя пользователя
+    name: str = Field(..., min_length=1, max_length=300, title="Имя пользователя")
 
 
-class UserUpdate(BaseModel):
+class UserUpdateSchema(BaseModel):
     """Обновление пользователя"""
-    email: EmailStr | None = None  # можно не обновлять
+    email: EmailStr | None = None
     name: str | None = None
 
 
-class UserRead(BaseModel):
+class UserReadSchema(BaseSchema):
     """Ответ клиенту (чтение пользователя)"""
     id: UUID
     email: EmailStr
     name: str
     created_at: datetime
-
-    class Config:
-        orm_mode = True  # позволяет использовать SQLAlchemy объекты
