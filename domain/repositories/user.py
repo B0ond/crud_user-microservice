@@ -23,12 +23,16 @@ class AbstractUserRepository(ABC):
         pass
 
     @abstractmethod
-    async def update_user(self, user: UserUpdateSchema) -> UserReadSchema:
+    async def update_user(self,user_id: UUID, user: UserUpdateSchema) -> UserReadSchema:
         """Обновить пользователя"""
         pass
-        # TODO: добавить обновление почты т.к. она уникальная
 
     @abstractmethod
     async def delete_user(self, user_id: UUID) -> None:
         """Удалить пользователя"""
+        pass
+
+    @abstractmethod
+    async def get_all(self) -> list[UserReadSchema]:
+        """Получить всех пользователей"""
         pass

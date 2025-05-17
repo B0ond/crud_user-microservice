@@ -1,3 +1,4 @@
+from typing import Any, Coroutine
 from uuid import UUID
 from pydantic import EmailStr
 from domain.schemas.user import UserCreateSchema, UserReadSchema, UserUpdateSchema
@@ -9,8 +10,12 @@ class UsersService:
 
     Методы:
         - create_user - создание нового пользователя
-        - get_user - получение пользователя по email
+        - get_user_by_email - получение пользователя по email
+        - get_user_by_id - получение пользователя по id
         - update_user - обновление пользователя
+        - get_all_users - получение всех пользователей
+        - delete_user - удаление пользователя
+
     """
     def __init__(self, user_repo: AbstractUserRepository) -> None:
         self.user_repo = user_repo
@@ -42,17 +47,26 @@ class UsersService:
 
 
     async def update_user(self,
-                          user_id: UUID | None = None,
-                          user_data: UserUpdateSchema | None = None
-                          ) -> UserReadSchema:
-        user = await self.user_repo.get_by_email(user_data.email)
-        if not user:
-            raise UserEmailNotFound(email=user_data.email)
-        updated_user = await self.user_repo.update_user(user)
-        # пока делаю...
+                          user_id: UUID,
+                          user_data: UserUpdateSchema
+                          ) -> UserReadSchema | None:
+        """Обновление пользователя"""
+        existing_user = await self.user_repo.get_by_id(user_id)
+        if not existing_user:
+            raise UserIdNotFound(user_id=user_id)
+        if not user_data:
+            raise ValueError("Данные для обновления не предоставлены")
+        updated_user = await self.user_repo.update_user(user_id, user_data)
+        if not updated_user:
+            return updated_user
 
-    # async def update_user(self, user_data: UserUpdateSchema) -> UserReadSchema:
-    #     user = await self.user_repo.get_by_email(user_data.email)
-    #     if not user:
-    #         raise UserNotFound(email=user_data.email)
-    #     updated_user = await self.user_repo.update_user(user)
+    async def get_all_users(self) -> list[UserReadSchema]:
+        """Получение всех пользователей"""
+        return await self.user_repo.get_all()
+
+    async def delete_user(self, user_id: UUID) -> None:
+        """Удаление пользователя"""
+        existing_user = await self.user_repo.get_by_id(user_id)
+        if not existing_user:
+            raise UserIdNotFound(user_id=user_id)
+        return await self.user_repo.delete_user(user_id)

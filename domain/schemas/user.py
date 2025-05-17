@@ -1,12 +1,11 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from uuid import UUID
 from datetime import datetime
 
 
 class ReadModel(BaseModel):
     """для удобства чтения объектов модели данных в виде словарей"""
-    class Config:
-        orm_mode = True  # по умолчанию pydantic работает только с dict,
+    model_config = ConfigDict(from_attributes=True)  # по умолчанию pydantic работает только с dict,
         # поэтому нужно сказать ему что работаем с ORM объектами
 
 
