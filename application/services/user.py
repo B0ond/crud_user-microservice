@@ -18,7 +18,7 @@ class UsersService:
 
     """
     def __init__(self, user_repo: AbstractUserRepository) -> None:
-        self.user_repo = user_repo
+        self.user_repo: AbstractUserRepository = user_repo
 
     async def create_user(self, user_data: UserCreateSchema) -> UserReadSchema:
         """Создание пользователя"""
@@ -31,7 +31,7 @@ class UsersService:
 
     async def get_user_by_email(self, email: EmailStr) -> UserReadSchema:
         """Получение пользователя по email"""
-        #  т.к email уникален
+        #  т.к email может быть только у одного пользователя, добавил сервис для поиска по email
         existing_user = await self.user_repo.get_by_email(email)
         if not existing_user:
             raise UserEmailNotFound(email=email)

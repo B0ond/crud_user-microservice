@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-from uuid import UUID
+from uuid import UUID, uuid4
 from datetime import datetime
 
 
@@ -11,6 +11,8 @@ class ReadModel(BaseModel):
 
 class UserCreateSchema(BaseModel):
     """Создание пользователя (входные данные от клиента)"""
+    id: UUID = Field(default_factory=uuid4, alias="_id")
+    email: EmailStr = Field(...)
     email: EmailStr  # проверяет, что это валидная почта
     name: str = Field(..., min_length=1, max_length=50, title="Имя пользователя")
 
