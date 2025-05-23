@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 from pydantic import EmailStr
-from domain.schemas.user import UserCreateSchema, UserReadSchema, UserUpdateSchema
+from src.domain.schemas.user import UserCreateSchema, UserReadSchema, UserUpdateSchema
 
 
 class AbstractUserRepository(ABC):

@@ -1,9 +1,8 @@
-from typing import Any, Coroutine
 from uuid import UUID
 from pydantic import EmailStr
-from domain.schemas.user import UserCreateSchema, UserReadSchema, UserUpdateSchema
-from domain.exceptions.user import UserEmailNotFound, UserIdNotFound, UserAlreadyExists
-from domain.repositories.user import AbstractUserRepository
+from src.domain.schemas.user import UserCreateSchema, UserReadSchema, UserUpdateSchema
+from src.domain.exceptions.user import UserEmailNotFound, UserIdNotFound, UserAlreadyExists
+from src.domain.repositories.user import AbstractUserRepository
 
 class UsersService:
     """Сервис для работы с пользователями.
